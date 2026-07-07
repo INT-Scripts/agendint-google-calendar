@@ -1,0 +1,21 @@
+# Fichiers d'environnement et secrets
+.env
+credentials.json
+token.json
+
+# Dossiers d'historique et logs
+scrape_history/
+sync.log
+*.log
+
+# Python et environnement virtuel
+__pycache__/
+*.pyc
+.venv/
+env/
+venv/
+.env/
+
+# Mac / Windows
+.DS_Store
+Thumbs.db
