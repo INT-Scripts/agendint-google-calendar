@@ -206,6 +206,17 @@ def sync_events(scraped_events: List[Event], start_date: date, end_date: date, d
 
     logger.info(f"Diff results: {len(to_insert)} to insert, {len(to_update)} to update, {len(to_delete)} to delete.")
 
+    # Sort intelligently: closest future first, then closest past
+    today_iso = date.today().isoformat()
+    
+    def sort_intelligently(events_list, get_date_func):
+        future = sorted([e for e in events_list if get_date_func(e) >= today_iso], key=lambda e: get_date_func(e))
+        past = sorted([e for e in events_list if get_date_func(e) < today_iso], key=lambda e: get_date_func(e), reverse=True)
+        return future + past
+
+    to_insert = sort_intelligently(to_insert, lambda e: e.date)
+    to_update = sort_intelligently(to_update, lambda u: u[0].date)
+
     if dry_run:
         logger.info("DRY RUN: No modifications will be made to Google Calendar.")
         return
